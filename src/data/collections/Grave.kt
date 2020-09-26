@@ -5,7 +5,7 @@ import org.bson.types.ObjectId
 
 data class Grave(
     @BsonId
-    val graveRowId: String = ObjectId().toString(),
+    val graveId: String = ObjectId().toString(), //primary key
 
     val cemeteryId: String,
 

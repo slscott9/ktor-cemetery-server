@@ -7,15 +7,15 @@ import org.bson.types.ObjectId
 data class Cemetery(
 
     @BsonId
-    val cemeteryRowId: String = ObjectId().toString(), //default value generated primary key
+    val cemeteryId: String = ObjectId().toString(), //default value generated primary key
 
-    val cemeteryName: String,
+    val name: String,
 
-    val cemeteryLocation: String,
+    val location: String,
 
-    val cemeteryState: String,
+    val state: String,
 
-    val cemeteryCounty: String,
+    val county: String,
 
     val township: String,
 
