@@ -61,10 +61,16 @@ suspend fun updateGraves(updateGraveList : List<Grave>) : Boolean {
 
     updateGraveList.forEachIndexed { index, grave ->
 
-        val goodUpdate = graveCollection.updateOne(grave.graveId, upsert()).wasAcknowledged()
+        val goodUpdate = graveCollection.updateOne(Grave::graveId eq grave.graveId, grave, upsert()).wasAcknowledged()
         if(!goodUpdate){
             return false
         }
     }
     return true
+}
+
+suspend fun updateCemeteries(updateCemeteryList: List<Cemetery>): Boolean {
+    updateCemeteryList.forEachIndexed { index, cemetery ->
+
+    }
 }

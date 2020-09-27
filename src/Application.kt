@@ -28,6 +28,7 @@ fun Application.module(testing: Boolean = false) {
         registerRoute()
         loginRoute()
         cemeteryRoute()
+
     } //enables url endpoints to make this REST api
 
     //Specifies what type of data ktor server will serve

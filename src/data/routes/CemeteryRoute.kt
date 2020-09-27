@@ -1,9 +1,6 @@
 package com.cemetery.data.routes
 
-import com.cemetery.data.getAllGravesForUser
-import com.cemetery.data.getCemeteriesForUser
-import com.cemetery.data.insertNewCemeteries
-import com.cemetery.data.insertNewGraves
+import com.cemetery.data.*
 import com.cemetery.data.requests.AddNewCemsRequest
 import com.cemetery.data.requests.AddNewGravesRequest
 import com.cemetery.data.responses.SimpleResponse
@@ -17,6 +14,25 @@ import io.ktor.response.*
 import io.ktor.routing.*
 
 fun Route.cemeteryRoute() {
+
+    route("/updateGraveList"){
+        authenticate {
+            post {
+                val request = try {
+                    call.receive<AddNewGravesRequest>()
+                }catch (e: ContentTransformationException){
+                    call.respond(BadRequest)
+                    return@post
+                }
+
+                if(updateGraves(request.newGraveList)){
+                    call.respond(SimpleResponse(true, "Successfully updated graves"))
+                }else{
+                    call.respond(SimpleResponse(false, "Failed to update graves"))
+                }
+            }
+        }
+    }
     route("/getAllCems"){
 
         //whoever makes requests to this endpoint must be authenticated
