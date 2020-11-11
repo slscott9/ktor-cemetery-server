@@ -15,6 +15,25 @@ import io.ktor.routing.*
 
 fun Route.cemeteryRoute() {
 
+    route("/updateCemeteryList"){
+        authenticate {
+            post {
+                val request = try {
+                    call.receive<AddNewCemsRequest>()
+                }catch (e: ContentTransformationException){
+                    call.respond(BadRequest)
+                    return@post
+                }
+
+                if(updateCemeteries(request.newCemList)){
+                    call.respond(SimpleResponse(true, "Successfully updated cemeteries"))
+                }else {
+                    call.respond(SimpleResponse(false, "Failed to update cemeteries "))
+                }
+            }
+        }
+    }
+
     route("/updateGraveList"){
         authenticate {
             post {
@@ -105,6 +124,7 @@ fun Route.cemeteryRoute() {
             }
         }
     }
+
 
 
 }

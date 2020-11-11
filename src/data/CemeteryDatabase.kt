@@ -3,6 +3,7 @@ package com.cemetery.data
 import com.cemetery.data.collections.Cemetery
 import com.cemetery.data.collections.Grave
 import com.cemetery.data.collections.User
+import com.cemetery.data.security.checkHashForPassword
 import com.mongodb.client.model.InsertManyOptions
 import io.ktor.html.*
 import org.litote.kmongo.coroutine.coroutine
@@ -33,7 +34,7 @@ suspend fun checkIfUserExists(emailQuery: String) : Boolean {
 suspend fun checkPasswordForEmail(emailQuery: String, passwordToCheck: String) : Boolean {
     val actualPassword = userCollection.findOne(User::email eq emailQuery)?.password ?: return false
 
-    return actualPassword == passwordToCheck
+    return checkHashForPassword(passwordToCheck, actualPassword)
 }
 
 suspend fun getCemeteriesForUser() : List<Cemetery> {
@@ -61,7 +62,11 @@ suspend fun updateGraves(updateGraveList : List<Grave>) : Boolean {
 
     updateGraveList.forEachIndexed { index, grave ->
 
-        val goodUpdate = graveCollection.updateOne(Grave::graveId eq grave.graveId, grave, upsert()).wasAcknowledged()
+        val goodUpdate = graveCollection.updateOne(
+                Grave::graveId eq grave.graveId,
+                grave, upsert()
+        ).wasAcknowledged()
+
         if(!goodUpdate){
             return false
         }
@@ -71,6 +76,14 @@ suspend fun updateGraves(updateGraveList : List<Grave>) : Boolean {
 
 suspend fun updateCemeteries(updateCemeteryList: List<Cemetery>): Boolean {
     updateCemeteryList.forEachIndexed { index, cemetery ->
+        val goodUpdate = cemeteryCollection.updateOne(
+                Cemetery::cemeteryId eq cemetery.cemeteryId,
+                cemetery, upsert()
+        ).wasAcknowledged()
 
+        if(!goodUpdate){
+            return false
+        }
     }
+    return true
 }

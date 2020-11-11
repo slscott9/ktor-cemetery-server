@@ -5,6 +5,7 @@ import com.cemetery.data.collections.User
 import com.cemetery.data.registerUser
 import com.cemetery.data.requests.AccountRequest
 import com.cemetery.data.responses.SimpleResponse
+import com.cemetery.data.security.getHashWithSalt
 import io.ktor.application.*
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.OK
@@ -25,7 +26,7 @@ fun Route.registerRoute() {
 
             val userExists = checkIfUserExists(request.email)
             if(!userExists){
-                if(registerUser(User(request.email, request.password))){
+                if(registerUser(User(request.email, getHashWithSalt(request.password)))){
                     call.respond(OK, SimpleResponse(true, "Successfully created account"))
                 }else{
                     call.respond(OK, SimpleResponse(false, "An unknown error occurred"))
